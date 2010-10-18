@@ -25,7 +25,7 @@ $target.bind('init', function() {
   });
 });
 
-$scene.delegate('.target', 'click', function( e ) {
+$scene.delegate('.target', jQuery.browser.mozilla? 'MozTouchDown' : 'click', function( e ) {
   var self = this;
   e.preventDefault();
   $(this)
