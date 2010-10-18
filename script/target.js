@@ -33,7 +33,8 @@ $scene.delegate('.target', jQuery.browser.mozilla? 'MozTouchDown' : 'click', fun
       $(this).nextAll('p').andSelf().fadeIn();
       $(this).dequeue();
     });
-}).click(false);
+// Prevent image dragging
+}).mousedown(function( e ) { e.preventDefault(); });
 
 function target( y, speed, text ) {
   if ( typeof speed === 'string' ) {
