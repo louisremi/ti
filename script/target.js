@@ -15,14 +15,15 @@ var
 init.list.push($target);
 
 $target.bind('init', function() {
+  var css = {
+      borderWidth: vh(2)
+    , fontSize: vh(4)
+  };
+  css[$.browser.mozilla? 'MozBorderRadius' : 'borderRadius'] = vh(1);
   $target.css({
       width: vh(8)
     , height: vh(8)
-  }).children('p').css({
-      borderWidth: vh(2)
-    , borderRadius: vh(1)
-    , fontSize: vh(4)
-  });
+  }).children('p').css(css);
 });
 
 $scene.delegate('.target', jQuery.browser.mozilla? 'MozTouchDown' : 'click', function( e ) {

@@ -25,7 +25,6 @@ $ball.bind('init', function() {
         top: viewHeight - ballHeight - vh(2)
       , left: vh(2)
       , border: vh(.5) + 'px solid white'
-      , borderRadius: vh(1)
       , opacity: .5
     }
     , paddleDimensions = {
@@ -41,7 +40,8 @@ $ball.bind('init', function() {
       , top: vh(30)
     }
     ;
-  paddleWidth += paddleOffset;  
+  paddleWidth += paddleOffset;
+  ballStart[$.browser.mozilla? 'MozBorderRadius' : 'borderRadius'] = vh(1);  
   
   $ball
     .css($.extend({}, {width: ballWidth}, ballStart))
@@ -54,7 +54,6 @@ $ball.bind('init', function() {
       [$paddleLeft, lPaddleStart]
     , [$paddleRight, rPaddleStart]
   ], function(i, arr) {
-    console.log(arr[0], arr[1])
     arr[0]
       .css($.extend({}, paddleDimensions, arr[1]))
       .appendTo($scene)
@@ -117,7 +116,19 @@ $paddleRight.add($paddleLeft).bind('up', function() {
   }
   position.top = viewHeight - bottom - ballHeight
   $(this).css('top', position.top).data('position', position);
-});
+
+}).bind('move', function( e, top ) {
+  var bottom = viewHeight - (top + paddleHeight)
+    , position = $.data(this, 'position');
+  if ( top <= 0 ) {
+    top = 0;
+  }
+  if ( bottom <= 0 ) {
+    top = viewHeight - paddleHeight;
+  }
+  position.top = top;
+  $(this).css('top', top).data('position', position);
+});;
 
 $.fn.pong = function( speed, angle ) {
   var dx = Math.cos(angle) * speed
@@ -181,6 +192,11 @@ $(window).bind('keypress', function( e ) {
       $paddleRight.trigger('down');
       break;
   }
+}).bind($.browser.mozilla? 'MozTouchMove  ' : 'mousemove', function( e ) {
+  if (Playing) {
+    (e.clientX < screen.width / 2? $paddleLeft : $paddleRight).trigger('move', [e.clientY - paddleHeight/4]);
+  }
+
 });
   
 })(jQuery, init);
