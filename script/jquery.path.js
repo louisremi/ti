@@ -32,7 +32,7 @@
     minus: function(a, b) {
       return [a[0]-b[0], a[1]-b[1]]
     }
-  }
+  };
    
    $.path.bezier = function( params ) { 
      	params.start = $.extend({angle: 0, length: 0.3333}, params.start )
@@ -58,10 +58,16 @@
 
      /* p from 0 to 1 */
      this.css = function(p) {
-       var f1 = this.f1(p), f2 = this.f2(p), f3 = this.f3(p), f4=this.f4(p)
-       var x = this.p1[0]*f1 + this.p2[0]*f2 +this.p3[0]*f3 + this.p4[0]*f4;
-       var y = this.p1[1]*f1 + this.p2[1]*f2 +this.p3[1]*f3 + this.p4[1]*f4;
-       return {top: y + "px", left: x + "px"}
+       var f1 = this.f1(p), f2 = this.f2(p), f3 = this.f3(p), f4=this.f4(p), r;
+       // calculate r only if prev values are not undefined
+       if (this.prevX !== r) {
+         r = Math.atan2(this.prevY - this.y, this.prevX - this.x);
+       }
+       this.prevX = this.x;
+       this.prevY = this.y;
+       this.x = this.p1[0]*f1 + this.p2[0]*f2 +this.p3[0]*f3 + this.p4[0]*f4;
+       this.y = this.p1[1]*f1 + this.p2[1]*f2 +this.p3[1]*f3 + this.p4[1]*f4;
+       return {top: this.y + "px", left: this.x + "px", r: r}
      }
    }
 
@@ -91,11 +97,12 @@
    
        
   $.fx.step.path = function(fx){
-    var css = fx.end.css(1 - fx.pos)
+    var css = fx.end.css(1 - fx.pos);
+    if (css.r && $.support.transform) {
+      fx.elem.style[$.support.transform] = 'rotate('+css.r+'rad)';
+      delete css.r;
+    } 
     for(var i in css) 
       fx.elem.style[i] = css[i];
   }
 })(jQuery);
-
-
-

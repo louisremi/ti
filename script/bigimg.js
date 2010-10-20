@@ -6,11 +6,11 @@ var
   , $video = $('#video')
   ;
   
-init.list.push($bigimg);
+/*init.list.push($bigimg);
 
 $bigimg.bind('init', function() {
   
-});
+});*/
   
 function bigimg( src, startTop, startLeft, endTop, endLeft, speed ) {
   this.src = 'bigimg/'+src;

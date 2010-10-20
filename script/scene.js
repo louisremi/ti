@@ -9,7 +9,12 @@ $(window).bind('smartresize', function( e, videoHeight) {
 });
 
 $scene.bind('init', function() {
+  /*$scene.css({
+    height: _vh(100),
+    overflow: 'hidden'
+  });*/
   $(window).trigger('smartresize');
+  
 });
   
 })(jQuery);
